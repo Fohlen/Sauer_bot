@@ -1,0 +1,17 @@
+{
+    "name": "fohlen/Sauer_bot",
+    "description": "a telegram bot for sauerbraten mixes and clanwars",
+    "license": "GPL-3.0",
+    "config": {
+		"vendor-dir": "lib"
+	},
+    "require": {
+        "bcosca/fatfree-core": "dev-master"
+    },
+    "authors": [
+        {
+            "name": "Fohlen",
+            "email": "lennard@berger.work"
+        }
+    ]
+}

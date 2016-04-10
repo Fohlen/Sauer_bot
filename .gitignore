@@ -1,0 +1,7 @@
+# Composer stuff
+lib
+composer.lock
+
+# Eclipse stuff
+.settings
+.project
