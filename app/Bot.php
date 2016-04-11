@@ -4,6 +4,7 @@ class Bot extends \Prefab {
 	private $_BASE_URL; // Telegram API URL
 	// A list of commands
 	private $_COMMANDS = array(
+		'start',
 		'mix',
 		'cw'
 	);
@@ -16,7 +17,8 @@ class Bot extends \Prefab {
 	private function _parseCommand($string) {
 		if (strpos($string, '/') != 0 ) throw new Exception('No command found');
 		$commands = explode(' ', $string, 2);
-		if (in_array(substr($commands[0], 1, strlen($commands[0])), $this->_COMMANDS))
+		$commands[0] = substr($commands[0], 1, strlen($commands[0]));
+		if (in_array($commands[0], $this->_COMMANDS))
 			return $commands;
 		else
 			throw new Exception('Command not found');
@@ -37,6 +39,7 @@ class Bot extends \Prefab {
 		switch($command[0]) {
 			case 'mix':
 				$response = $message->from->first_name . ' requested a mix at ' . $command[1];
+				echo $response;
 				$responseMessage = array(
 					'chat_id' => $message->chat->id,
 					'text' => $response
@@ -54,6 +57,8 @@ class Bot extends \Prefab {
 				$options['content'] = json_encode($responseMessage);
 				
 				$result = \Web::instance()->request($this->_BASE_URL . '/sendMessage', $options);
+				break;
+			default:
 				break;
 		}
 	}
