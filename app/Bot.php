@@ -3,7 +3,7 @@
 class Bot extends \Prefab {
 	private $_BASE_URL; // Telegram API URL
 	// A list of commands
-	const COMMANDS = array(
+	private $_COMMANDS = array(
 		'mix',
 		'cw'
 	);
@@ -16,7 +16,7 @@ class Bot extends \Prefab {
 	private function _parseCommand($string) {
 		if (strpos($string, '/') != 0 ) throw new Exception('No command found');
 		$commands = explode(' ', $string, 2);
-		if (in_array($commands[0], COMMANDS))
+		if (in_array(substr($commands[0], 1, strlen($commands[0])), $this->_COMMANDS))
 			return $commands;
 		else
 			throw new Exception('Command not found');
