@@ -49,7 +49,8 @@ class Bot extends \Prefab {
 				
 				$responseMessage = array(
 					'chat_id' => $message->chat->id,
-					'text' => $response
+					'text' => '_' . $response . '_',
+					'parse_mode' => 'Markdown'
 				);
 				
 				$request = new Request('POST', $this->_CLIENT->getConfig('base_uri') . '/sendMessage', ['Content-Type' => 'application/json'], json_encode($responseMessage));
@@ -60,12 +61,13 @@ class Bot extends \Prefab {
 				if (empty($command[1])) {
 					$response = $message->from->first_name . ' is looking for a clanwar.';
 				} else {
-					$response = $message->from->first_name . ' requests a clanwar, ' . $command[1]; 
+					$response = $message->from->first_name . ' requests a clanwar, ' . $command[1];
 				}
 				
 				$responseMessage = array(
 						'chat_id' => $message->chat->id,
-						'text' => $response
+						'text' => '_' . $response . '_',
+						'parse_mode' => 'Markdown'
 				);
 				
 				$request = new Request('POST', $this->_CLIENT->getConfig('base_uri') . '/sendMessage', ['Content-Type' => 'application/json'], json_encode($responseMessage));
