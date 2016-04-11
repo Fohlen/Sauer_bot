@@ -6,7 +6,8 @@
 		"vendor-dir": "lib"
 	},
     "require": {
-        "bcosca/fatfree-core": "dev-master"
+        "bcosca/fatfree-core": "dev-master",
+        "guzzlehttp/guzzle": "~6.0"
     },
     "authors": [
         {

@@ -1,13 +1,16 @@
 <?php
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 
 class Bot extends \Prefab {
-	private $_BASE_URL; // Telegram API URL
+	private $_CLIENT; // The Guzzle HTTP client
 	// A list of commands
 	private $_COMMANDS = array(
 		'start',
 		'mix',
 		'cw'
 	);
+	
 	
 	/**
 	 * @return string[0] command, string[1] argument
@@ -26,37 +29,47 @@ class Bot extends \Prefab {
 	
 	public function __construct() {
 		// Initialise the base url for Telegram
-		$this->_BASE_URL = 'https://api.telegram.org/bot' . \Base::instance()->get('bot.token');
+		$this->_CLIENT = new Client ([
+			'base_uri' => 'https://api.telegram.org/bot' . \Base::instance()->get('bot.token'),
+			'timeout' => 2.0
+		]);
 	}
 	
 	public function respondMessage($message) {
+		// TODO: Add additional code to verify the messages
 		$command = $this->_parseCommand($message->text);
-		$options = array(
-				'method' => 'POST',
-				'Content-Type' => 'application/json',
-		);
 		
 		switch($command[0]) {
 			case 'mix':
-				$response = $message->from->first_name . ' requested a mix at ' . $command[1];
-				echo $response;
+				if (empty($command[1])) {
+					$response = $message->from->first_name . ' is looking for';
+				} else {
+					$response = $message->from->first_name . ' requested a mix at ' . $command[1];
+				}
+				
 				$responseMessage = array(
 					'chat_id' => $message->chat->id,
 					'text' => $response
 				);
-				$options['content'] = json_encode($responseMessage);
 				
-				$result = \Web::instance()->request($this->_BASE_URL . '/sendMessage', $options);
+				$request = new Request('POST', $this->_CLIENT->getConfig('base_uri') . '/sendMessage', ['Content-Type' => 'application/json'], json_encode($responseMessage));
+				$res = $this->_CLIENT->send($request);
 				break;
 			case 'cw':
-				$response = $message->from->first_name . ' is looking for a clanwar. ' . $command[1];
+				
+				if (empty($command[1])) {
+					$response = $message->from->first_name . ' is looking for a clanwar.';
+				} else {
+					$response = $message->from->first_name . ' requests a clanwar, ' . $command[1]; 
+				}
+				
 				$responseMessage = array(
 						'chat_id' => $message->chat->id,
 						'text' => $response
 				);
-				$options['content'] = json_encode($responseMessage);
 				
-				$result = \Web::instance()->request($this->_BASE_URL . '/sendMessage', $options);
+				$request = new Request('POST', $this->_CLIENT->getConfig('base_uri') . '/sendMessage', ['Content-Type' => 'application/json'], json_encode($responseMessage));
+				$res = $this->_CLIENT->send($request);
 				break;
 			default:
 				break;
